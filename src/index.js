@@ -2,6 +2,7 @@ import express from "express";
 import cors from "cors";
 const app = express();
 
+app.use(express.json())
 app.use(cors(
     {
         origin: "*",
@@ -10,10 +11,9 @@ app.use(cors(
 ));
 
 app.all("/req", async (req, res) => {
-    const endpoint = req.query.endpoint;
-    const token = req.query.token;
+    const {endpoint, token} = req.query;
     const method = req.method;
-    const body = req.body ? JSON.stringify(req.body) : null;
+    const body = (method !== "GET" && req.body) ? JSON.stringify(req.body) : null;
 
     if (!endpoint) {
         return res.status(400).json({error: "Missing endpoint parameter"});
