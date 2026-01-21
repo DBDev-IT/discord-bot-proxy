@@ -10,10 +10,10 @@ app.use(cors(
 ));
 
 app.get("/req", async (req, res) => {
-    const endpoint = req.query.endpoint as string;
-    const token = req.query.token as string;
-    const method = req.query.method as string || "GET";
-    const body = req.query.body ? JSON.stringify(req.query.body) : null;
+    const endpoint = req.query.endpoint;
+    const token = req.query.token;
+    const method = req.query.method || "GET";
+    const body = req.query.body ? JSON.parse(req.query.body) : null;
 
     if (!endpoint) {
         return res.status(400).json({error: "Missing endpoint parameter"});
@@ -32,6 +32,7 @@ app.get("/req", async (req, res) => {
             method,
             headers: {
                 Authorization: `Bot ${token}`,
+                "Content-Type": "application/json"
             },
             body
         });
