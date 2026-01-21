@@ -10,7 +10,7 @@ app.use(cors(
     }
 ));
 
-app.all("/req", async (req, res) => {
+app.all("/", async (req, res) => {
     const {endpoint, token} = req.query;
     const method = req.method;
     const body = (method !== "GET" && req.body) ? JSON.stringify(req.body) : null;
