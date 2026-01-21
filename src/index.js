@@ -9,7 +9,7 @@ app.use(cors(
     }
 ));
 
-app.get("/req", async (req, res) => {
+app.all("/req", async (req, res) => {
     const endpoint = req.query.endpoint;
     const token = req.query.token;
     const method = req.method;
