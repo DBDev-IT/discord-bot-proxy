@@ -1,5 +1,13 @@
 import express from "express";
+import cors from "cors";
 const app = express();
+
+app.use(cors(
+    {
+        origin: "*",
+        methods: ["GET", "POST", "PUT", "DELETE", "PATCH"]
+    }
+));
 
 app.get("/req", async (req, res) => {
     const endpoint = req.query.endpoint as string;
