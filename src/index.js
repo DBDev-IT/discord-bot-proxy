@@ -13,7 +13,7 @@ app.all("/req", async (req, res) => {
     const endpoint = req.query.endpoint;
     const token = req.query.token;
     const method = req.method;
-    const body = req.body ? JSON.parse(req.body) : null;
+    const body = req.body ? JSON.stringify(req.body) : null;
 
     if (!endpoint) {
         return res.status(400).json({error: "Missing endpoint parameter"});
