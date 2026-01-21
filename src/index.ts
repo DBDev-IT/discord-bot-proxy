@@ -1,52 +1,36 @@
-import express from 'express'
-import path from 'path'
-import { fileURLToPath } from 'url'
+import express from "express";
+const app = express();
 
-const __filename = fileURLToPath(import.meta.url)
-const __dirname = path.dirname(__filename)
+app.get("/req", async (req, res) => {
+    const endpoint = req.query.endpoint as string;
+    const token = req.query.token as string;
+    const method = req.query.method as string || "GET";
+    const body = req.query.body ? JSON.stringify(req.query.body) : null;
 
-const app = express()
+    if (!endpoint) {
+        return res.status(400).json({error: "Missing endpoint parameter"});
+    }
 
-// Home route - HTML
-app.get('/', (req, res) => {
-  res.type('html').send(`
-    <!doctype html>
-    <html>
-      <head>
-        <meta charset="utf-8"/>
-        <title>Express on Vercel</title>
-        <link rel="stylesheet" href="/style.css" />
-      </head>
-      <body>
-        <nav>
-          <a href="/">Home</a>
-          <a href="/about">About</a>
-          <a href="/api-data">API Data</a>
-          <a href="/healthz">Health</a>
-        </nav>
-        <h1>Welcome to Express on Vercel 🚀</h1>
-        <p>This is a minimal example without a database or forms.</p>
-        <img src="/logo.png" alt="Logo" width="120" />
-      </body>
-    </html>
-  `)
-})
+    if (!token) {
+        return res.status(400).json({error: "Missing token parameter"});
+    }
 
-app.get('/about', function (req, res) {
-  res.sendFile(path.join(__dirname, '..', 'components', 'about.htm'))
-})
+    if (method !== "GET" && method !== "POST" && method !== "PUT" && method !== "DELETE" && method !== "PATCH") {
+        return res.status(400).json({error: "Invalid method parameter"});
+    }
 
-// Example API endpoint - JSON
-app.get('/api-data', (req, res) => {
-  res.json({
-    message: 'Here is some sample API data',
-    items: ['apple', 'banana', 'cherry'],
-  })
-})
-
-// Health check
-app.get('/healthz', (req, res) => {
-  res.status(200).json({ status: 'ok', timestamp: new Date().toISOString() })
-})
-
-export default app
+    try {
+        const response = await fetch(`https://discord.com/api/v10/${endpoint}`, {
+            method,
+            headers: {
+                Authorization: `Bot ${token}`,
+            },
+            body
+        });
+        const data = await response.json();
+        res.json(data);
+    } catch (error) {
+        res.status(500).json({error: "Failed to fetch data"});
+    }
+});
+export default app;
