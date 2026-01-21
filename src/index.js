@@ -12,7 +12,7 @@ app.use(cors(
 app.get("/req", async (req, res) => {
     const endpoint = req.query.endpoint;
     const token = req.query.token;
-    const method = req.query.method || "GET";
+    const method = req.method;
     const body = req.body ? JSON.parse(req.body) : null;
 
     if (!endpoint) {
@@ -21,10 +21,6 @@ app.get("/req", async (req, res) => {
 
     if (!token) {
         return res.status(400).json({error: "Missing token parameter"});
-    }
-
-    if (method !== "GET" && method !== "POST" && method !== "PUT" && method !== "DELETE" && method !== "PATCH") {
-        return res.status(400).json({error: "Invalid method parameter"});
     }
 
     try {
