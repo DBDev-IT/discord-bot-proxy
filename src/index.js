@@ -13,7 +13,7 @@ app.get("/req", async (req, res) => {
     const endpoint = req.query.endpoint;
     const token = req.query.token;
     const method = req.query.method || "GET";
-    const body = req.get("Body") ? JSON.parse(req.get("Body")) : null;
+    const body = req.body ? JSON.parse(req.body) : null;
 
     if (!endpoint) {
         return res.status(400).json({error: "Missing endpoint parameter"});
